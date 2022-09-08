@@ -57,11 +57,12 @@ function App() {
           <h2>Parameters</h2>
           <form onSubmit={handleSubmit}>
             <div className="strategies-main">
-              <span>Runs</span>
+              <h3>Runs</h3>
               <input name="runs" type="number" value={runs} onChange={onRunsChange}/>
 
-              <span>Strategies (Hold down CTRL to select multiple)</span>
-              <select name="strategies" multiple onChange={onStratsChange}>
+              <h3>Strategies</h3>
+              <span>(Hold down CTRL to select multiple)</span>
+              <select className="strategies" name="strategies" multiple onChange={onStratsChange}>
                 <option value="0">Trusty Teammate</option>
                 <option value="1">Tattletale</option>
                 <option value="2">Lucky Fluke</option>
@@ -73,9 +74,13 @@ function App() {
                 <option value="8">Repeated Traitor</option>
                 <option value="9">Majority Matters</option>
               </select>
-            
-              <span>Values of payoffs, the following image shows the definition of each letter. Note that for the prisoner's dilemma in the
-                classical sense, the following must apply: <code>T &gt; R &gt; P &gt; S</code>.
+              <button>Select All</button>
+
+              <h3>Payoffs</h3>
+              <span>R: "Rewarding Payoff" for both denying, P: "Punising Payoff" for both confessing, T: "Tempting Payoff" for 
+                confessing while the companion receives S: "Suckers's Payoff" for denying. For the prisoner's dilemma 
+                in the classical sense, the following must apply: <code>T &gt; R &gt; P &gt; S</code>. The following table presents
+                the definition of each letter visually.
               </span>
               <img src="assets/payoff_table.PNG"></img>
               <div id="rewards">
