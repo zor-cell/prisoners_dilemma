@@ -68,12 +68,18 @@ void PrisonersDilemma::simulate() {
                 currentScore = currentScore + score;
             }
             currentScore = currentScore / static_cast<double>(runs);
+            scores.push_back(currentScore);
 
             //print scores
             strategies[i].print();
             strategies[j].print();
             currentScore.print();
         }
+    }
+
+    std::cout << scores.size() << "\n";
+    for(Score s : scores) {
+        s.print();
     }
 }
 

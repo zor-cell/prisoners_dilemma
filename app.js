@@ -47,6 +47,11 @@ function App() {
             dilemma.addStrategy(x);
           }
           dilemma.simulate();
+
+          /*const scores = new Array(dilemma.scores.size()).fill().map((_, score) => {
+            return dilemma.scores.get(score);
+          });
+          console.log(JSON.stringify(scores, null, 2), scores.length);*/
       });
     }  
 

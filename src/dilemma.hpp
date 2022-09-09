@@ -63,8 +63,8 @@ struct Data {
     int numTrustA, numTrustB;
 
     void reset() {
-        decisionsA.clear();
-        decisionsB.clear();
+        decisionsA.resize(0);
+        decisionsB.resize(0);
 
         hasToldA = false;
         hasToldB = false;
@@ -72,6 +72,11 @@ struct Data {
         numTrustA = 0;
         numTrustB = 0;
     }
+};
+
+struct Result {
+    std::string a, b;
+    Score score;
 };
 
 //data required for some strategies to be efficient
@@ -92,6 +97,9 @@ class PrisonersDilemma {
         void addStrategy(int strategy);
         Score calculateRun(bool (*strat1)(bool), bool (*strat2)(bool));
         void simulate();
+
+        //saves average score of every iteration
+        std::vector<Score> scores;
 };
 #endif
 

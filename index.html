@@ -10,6 +10,21 @@
     </head>
       <script type="text/javascript" src="dilemma.js"></script>
       <script type="text/babel" src="app.js"></script>
+      <!--<script>
+        const worker = new Worker('worker.js');
+        worker.postMessage({
+          type: 'CALCULATE',
+          payload: {runs: 1000, strats: [0]}
+        });
+
+        worker.onmessage = function(message) {
+          if(message.data.type == 'RESULT') {
+            const result = message.data.payload.result;
+            document.getElementById("result").innerHTML = "Answer Computed: " + result;
+          }
+        }
+      </script>-->
 
       <div id="container"></div>
+      <div id="result">Computing Result...</div>
 </html>
