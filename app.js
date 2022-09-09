@@ -1,12 +1,8 @@
-function Heading() {
-    const title = "Prisoner's Dilemma: Simulation";
-    return <h1>{title}</h1>
-}
-
 function App() {
     const [runs, setRuns] = React.useState(1000);
-    const [strats, setStrats] = React.useState([0]);
+    const [strats, setStrats] = React.useState([]);
     const [rewards, setRewards] = React.useState({r: -1, p: -2, t: 0, s: -3})
+    const [scores, setScores] = React.useState([{name: "-", score: {a: 0, b: 0, total: 0}}]);
 
     function onRunsChange(event) {
       setRuns(Number(event.target.value));
@@ -20,21 +16,45 @@ function App() {
 
       setStrats(selected);
     }
+    
+    //select every option of strategies select and update strats
+    function onSelectAll(event) {
+      let s = document.getElementsByName("strategies")[0];
+
+      let selected = [];
+      for(let option of s.options) {
+        option.selected = true;
+        selected.push(parseInt(option.value));
+      }
+
+      setStrats(selected);
+    }
 
     function onRewardsChange(event) {
-      //this.setState({value: event.target.value});
-      //console.log(event.target.parentNode, event.target.value);
-
-      let rewards = {r: 0, p: 0, t: 0, s: 0};
+      let tempRewards = {r: 0, p: 0, t: 0, s: 0};
       for(let child of event.target.parentNode.children) {
-        if(child.getAttribute("name") == "rewards-r") rewards.r = child.value;
-        else if(child.getAttribute("name") == "rewards-p") rewards.p = child.value;
-        else if(child.getAttribute("name") == "rewards-t") rewards.t = child.value;
-        else if(child.getAttribute("name") == "rewards-s") rewards.s = child.value;
+        if(child.getAttribute("name") == "rewards-r") tempRewards.r = child.value;
+        else if(child.getAttribute("name") == "rewards-p") tempRewards.p = child.value;
+        else if(child.getAttribute("name") == "rewards-t") tempRewards.t = child.value;
+        else if(child.getAttribute("name") == "rewards-s") tempRewards.s = child.value;
       }
       
-      console.log(rewards);
-      setRewards(rewards);
+      setRewards(tempRewards);
+    }
+
+    function onSortChange(sortBy) {
+      let tempScores = scores;
+      console.log("sort");
+
+      tempScores.sort((l, r) => {
+        if(sortBy == "N") return l.name < r.name ? 1 : -1;
+        else if(sortBy == "A") return l.score.a < r.score.a ? 1 : -1;
+        else if(sortBy == "B") return l.score.b < r.score.b ? 1 : -1;
+        else if(sortBy == "T") return l.score.total < r.score.total ? 1 : -1;
+      });
+
+      //console.log(tempScores);
+      setScores(tempScores);
     }
 
     function handleSubmit(event) {
@@ -48,16 +68,28 @@ function App() {
           }
           dilemma.simulate();
 
-          /*const scores = new Array(dilemma.scores.size()).fill().map((_, score) => {
+          let results = new Array(dilemma.scores.size()).fill().map((_, score) => {
             return dilemma.scores.get(score);
           });
-          console.log(JSON.stringify(scores, null, 2), scores.length);*/
+          /*let prettyResults = "";
+          for(let result of results) {
+            prettyResults += result.name + " ";
+            prettyResults += result.score.a.toFixed(6) + " ";
+            prettyResults += result.score.b.toFixed(6) + " ";
+            prettyResults += result.score.total.toFixed(6) + "\n";
+          }*/
+          results.sort((l, r) => {
+            l.name < r.name ? 1 : -1;
+          });
+          setScores(results);
+          //console.log(results, scores);
+          //document.getElementById("results").innerHTML = prettyResults;
       });
-    }  
+    }
 
     return (
       <main>
-        <Heading/>
+        <h1>Prisoner's Dilemma: Simulation</h1>
         <section className="parameters">
           <h2>Parameters</h2>
           <form onSubmit={handleSubmit}>
@@ -79,7 +111,7 @@ function App() {
                 <option value="8">Repeated Traitor</option>
                 <option value="9">Majority Matters</option>
               </select>
-              <button>Select All</button>
+              <input type="button" value="Select All" onClick={onSelectAll}></input>
 
               <h3>Payoffs</h3>
               <span>R: "Rewarding Payoff" for both denying, P: "Punising Payoff" for both confessing, T: "Tempting Payoff" for 
@@ -98,19 +130,41 @@ function App() {
                 <span>S</span>
                 <input name="rewards-s" type="range" min="-10" max="10" value="{rewards.s}" onChange={onRewardsChange}></input>
               </div>
-              <input type="submit" value="Submit" />
+              <input type="submit" value="Run Simulation" />
             </div>
           </form>
         </section>
 
         <section className="results">
-          <h2>Results</h2>
-          <div>Progress Bar</div>
+          <div>Computing results...</div>
 
-          <div>text field</div>
-
-          <div>Results</div>
-        </section>
+          <table className="results-table">
+            <caption>Results of {runs} runs</caption>
+            <thead>
+              <tr>
+                <th onClick={() => onSortChange("N")}>Name</th>
+                <th onClick={() => onSortChange("A")}>A</th>
+                <th onClick={() => onSortChange("B")}>B</th>
+                <th onClick={() => onSortChange("T")}>Total</th>
+              </tr>
+          </thead>
+          <tbody>
+            {console.log("render", scores)}
+            {
+              scores.map((val, key) => {
+              return (
+                <tr key={key}>
+                  <td>{val.name}</td>
+                  <td>{val.score.a.toFixed(6)}</td>
+                  <td>{val.score.b.toFixed(6)}</td>
+                  <td>{val.score.total.toFixed(6)}</td>
+                </tr>
+              )
+              })
+            }
+          </tbody>
+        </table>
+      </section>
       </main>
     );
 }

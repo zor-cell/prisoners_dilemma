@@ -59,6 +59,7 @@ Score PrisonersDilemma::calculateRun(bool (*strat1)(bool), bool (*strat2)(bool))
 
 void PrisonersDilemma::simulate() {
     for(int i = 0;i < strategies.size();i++) {
+        Score averageScore;
         for(int j = 0;j < strategies.size();j++) {
             data.reset();
             //calculate average score of every run
@@ -68,18 +69,15 @@ void PrisonersDilemma::simulate() {
                 currentScore = currentScore + score;
             }
             currentScore = currentScore / static_cast<double>(runs);
-            scores.push_back(currentScore);
+            averageScore = averageScore + currentScore;
 
             //print scores
             strategies[i].print();
             strategies[j].print();
             currentScore.print();
         }
-    }
-
-    std::cout << scores.size() << "\n";
-    for(Score s : scores) {
-        s.print();
+        averageScore = averageScore / static_cast<double>(strategies.size());
+        scores.push_back({strategies[i].name, averageScore});
     }
 }
 

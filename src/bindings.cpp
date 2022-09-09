@@ -17,5 +17,10 @@ EMSCRIPTEN_BINDINGS(prisonersdilemma) {
    .field("total", &Score::total)
    ;
 
-   register_vector<Score>("vector<Score>");
+   value_object<Result>("Result")
+   .field("name", &Result::name)
+   .field("score", &Result::score)
+   ;
+
+   register_vector<Result>("vector<Result>");
 }

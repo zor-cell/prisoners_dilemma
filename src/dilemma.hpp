@@ -75,7 +75,7 @@ struct Data {
 };
 
 struct Result {
-    std::string a, b;
+    std::string name;
     Score score;
 };
 
@@ -99,7 +99,7 @@ class PrisonersDilemma {
         void simulate();
 
         //saves average score of every iteration
-        std::vector<Score> scores;
+        std::vector<Result> scores;
 };
 #endif
 
