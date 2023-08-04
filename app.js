@@ -1,7 +1,7 @@
 function App() {
     const [runs, setRuns] = React.useState(1000);
     const [strats, setStrats] = React.useState([]);
-    const [rewards, setRewards] = React.useState({r: -1, p: -2, t: 0, s: -3})
+    const [rewards, setRewards] = React.useState({r: -2, p: -4, t: -1, s: -6})
     const [scores, setScores] = React.useState([{name: "-", score: {a: 0, b: 0, total: 0}}]);
 
     function onRunsChange(event) {
@@ -31,13 +31,16 @@ function App() {
     }
 
     function onRewardsChange(event) {
-      let tempRewards = {r: 0, p: 0, t: 0, s: 0};
-      for(let child of event.target.parentNode.children) {
-        if(child.getAttribute("name") == "rewards-r") tempRewards.r = child.value;
-        else if(child.getAttribute("name") == "rewards-p") tempRewards.p = child.value;
-        else if(child.getAttribute("name") == "rewards-t") tempRewards.t = child.value;
-        else if(child.getAttribute("name") == "rewards-s") tempRewards.s = child.value;
-      }
+      let tempRewards = {};
+
+      let r = document.getElementById("rewards-r").value;
+      tempRewards.r = r;
+      let p = document.getElementById("rewards-p").value;
+      tempRewards.p = p;
+      let t = document.getElementById("rewards-t").value;
+      tempRewards.t = t;
+      let s = document.getElementById("rewards-s").value;
+      tempRewards.s = s;
       
       setRewards(tempRewards);
     }
@@ -62,7 +65,7 @@ function App() {
       //Wait for module to initialize,
       createModule().then(({PrisonersDilemma}) => {
           // Perform computation
-          const dilemma = new PrisonersDilemma(runs); //pass rewards
+          const dilemma = new PrisonersDilemma(runs, rewards.r, rewards.p, rewards.t, rewards.s); //pass rewards
           for(let x of strats) {
             dilemma.addStrategy(x);
           }
@@ -114,21 +117,25 @@ function App() {
               <input type="button" value="Select All" onClick={onSelectAll}></input>
 
               <h3>Payoffs</h3>
-              <span>R: "Rewarding Payoff" for both denying, P: "Punising Payoff" for both confessing, T: "Tempting Payoff" for 
-                confessing while the companion receives S: "Suckers's Payoff" for denying. For the prisoner's dilemma 
+              <p>R: "Rewarding Payoff" for both denying <br></br>
+                    P: "Punising Payoff" for both confessing <br></br> 
+                    T: "Tempting Payoff" for confessing while the companion receives S: "Suckers's Payoff" for denying <br></br> 
+                    For the prisoner's dilemma 
                 in the classical sense, the following must apply: <code>T &gt; R &gt; P &gt; S</code>. The following table presents
                 the definition of each letter visually.
-              </span>
+              </p>
               <img src="assets/payoff_table.PNG"></img>
               <div id="rewards">
+                {console.log(rewards)}
                 <span>R</span>
-                <input name="rewards-r" type="range" min="-10" max="10" value="{rewards.r}" onChange={onRewardsChange}></input>
+                <input id="rewards-r" type="number" min="-10" max="10" value={rewards.r} onChange={onRewardsChange}></input>
                 <span>P</span>
-                <input name="rewards-p" type="range" min="-10" max="10" value="{rewards.p}" onChange={onRewardsChange}></input>
+                <input id="rewards-p" type="number" min="-10" max="10" defaultValue={rewards.p} onChange={onRewardsChange}></input>
                 <span>T</span>
-                <input name="rewards-t" type="range" min="-10" max="10" value="{rewards.t}" onChange={onRewardsChange}></input>
+                <input id="rewards-t" type="number" min="-10" max="10" defaultValue={rewards.t} onChange={onRewardsChange}></input>
                 <span>S</span>
-                <input name="rewards-s" type="range" min="-10" max="10" value="{rewards.s}" onChange={onRewardsChange}></input>
+                <input id="rewards-s" type="number" min="-10" max="10" defaultValue={rewards.s} onChange={onRewardsChange}></input>
+                <span>test</span>
               </div>
               <input type="submit" value="Run Simulation" />
             </div>
@@ -136,7 +143,7 @@ function App() {
         </section>
 
         <section className="results">
-          <div>Computing results...</div>
+          {/* <div>Computing results...</div> */}
 
           <table className="results-table">
             <caption>Results of {runs} runs</caption>
@@ -149,7 +156,7 @@ function App() {
               </tr>
           </thead>
           <tbody>
-            {console.log("render", scores)}
+            {/*console.log("render")*/}{/*console.log("render", scores)*/}
             {
               scores.map((val, key) => {
               return (

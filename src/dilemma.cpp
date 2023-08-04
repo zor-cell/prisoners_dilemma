@@ -2,10 +2,10 @@
 
 Data data;
 
-PrisonersDilemma::PrisonersDilemma(int _runs) : runs(_runs) {
+PrisonersDilemma::PrisonersDilemma(int _runs, int r, int p, int t, int s) : runs(_runs) {
     srand(time(NULL));
 
-    rewards = {-1, -2, 0, -3};
+    rewards = {r, p, t, s};
     data.reset();
 }
 

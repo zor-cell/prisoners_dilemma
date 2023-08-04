@@ -5,7 +5,7 @@ using namespace emscripten;
 
 EMSCRIPTEN_BINDINGS(prisonersdilemma) {
    class_<PrisonersDilemma>("PrisonersDilemma")
-   .constructor<int>()
+   .constructor<int, int, int, int, int>()
    .function("simulate", &PrisonersDilemma::simulate)
    .function("addStrategy", &PrisonersDilemma::addStrategy)
    .property("scores", &PrisonersDilemma::scores)
