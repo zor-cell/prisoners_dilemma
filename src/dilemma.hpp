@@ -92,7 +92,7 @@ class PrisonersDilemma {
         Reward rewards;
 
     public:
-        PrisonersDilemma(int _runs);
+        PrisonersDilemma(int _runs, int r, int p, int t, int s);
 
         void addStrategy(int strategy);
         Score calculateRun(bool (*strat1)(bool), bool (*strat2)(bool));

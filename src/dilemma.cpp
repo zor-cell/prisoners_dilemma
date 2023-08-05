@@ -72,9 +72,9 @@ void PrisonersDilemma::simulate() {
             averageScore = averageScore + currentScore;
 
             //print scores
-            strategies[i].print();
-            strategies[j].print();
-            currentScore.print();
+            //strategies[i].print();
+            //strategies[j].print();
+            //currentScore.print();
         }
         averageScore = averageScore / static_cast<double>(strategies.size());
         scores.push_back({strategies[i].name, averageScore});

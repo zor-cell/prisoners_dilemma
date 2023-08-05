@@ -112,5 +112,5 @@
         "string_view": "cpp",
         "*.ipp": "cpp"
     },
-    "C_Cpp.errorSquiggles": "Disabled"
+    "C_Cpp.errorSquiggles": "enabled"
 }

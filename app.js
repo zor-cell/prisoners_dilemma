@@ -5,7 +5,8 @@ function App() {
     const [scores, setScores] = React.useState([{name: "-", score: {a: 0, b: 0, total: 0}}]);
 
     function onRunsChange(event) {
-      setRuns(Number(event.target.value));
+      const num = Number(event.target.value);
+      setRuns((num <= 1000000 ? num : 1000000));
     }
 
     function onStratsChange(event) {
@@ -62,32 +63,34 @@ function App() {
 
     function handleSubmit(event) {
       event.preventDefault();
-      //Wait for module to initialize,
-      createModule().then(({PrisonersDilemma}) => {
-          // Perform computation
-          const dilemma = new PrisonersDilemma(runs, rewards.r, rewards.p, rewards.t, rewards.s); //pass rewards
-          for(let x of strats) {
-            dilemma.addStrategy(x);
-          }
-          dilemma.simulate();
 
-          let results = new Array(dilemma.scores.size()).fill().map((_, score) => {
-            return dilemma.scores.get(score);
-          });
-          /*let prettyResults = "";
-          for(let result of results) {
-            prettyResults += result.name + " ";
-            prettyResults += result.score.a.toFixed(6) + " ";
-            prettyResults += result.score.b.toFixed(6) + " ";
-            prettyResults += result.score.total.toFixed(6) + "\n";
-          }*/
-          results.sort((l, r) => {
-            l.name < r.name ? 1 : -1;
-          });
-          setScores(results);
-          //console.log(results, scores);
-          //document.getElementById("results").innerHTML = prettyResults;
-      });
+      document.getElementById("result").innerHTML = "Computing Results...";
+      document.getElementById("results-table").style.opacity = 0.15;
+
+      const worker = new Worker('worker.js');
+        worker.postMessage({
+            type: 'CALCULATE',
+            payload: {
+                runs: runs,
+                rewards: rewards,
+                strats: strats,
+            }
+        });
+
+        //receive result as message from web worker
+        worker.onmessage = function(message) {
+            if(message.data.type === 'RESULT') {
+                const results = message.data.payload.result;
+                results.sort((l, r) => {
+                  l.name < r.name ? 1 : -1;
+                });
+
+                setScores(results);
+
+                document.getElementById("result").innerHTML = "Results Computed!";
+                document.getElementById("results-table").style.opacity = 1;
+            }
+        }
     }
 
     return (
@@ -126,16 +129,14 @@ function App() {
               </p>
               <img src="assets/payoff_table.PNG"></img>
               <div id="rewards">
-                {console.log(rewards)}
                 <span>R</span>
-                <input id="rewards-r" type="number" min="-10" max="10" value={rewards.r} onChange={onRewardsChange}></input>
+                <input id="rewards-r" type="number" value={rewards.r} onChange={onRewardsChange}></input>
                 <span>P</span>
-                <input id="rewards-p" type="number" min="-10" max="10" defaultValue={rewards.p} onChange={onRewardsChange}></input>
+                <input id="rewards-p" type="number" defaultValue={rewards.p} onChange={onRewardsChange}></input>
                 <span>T</span>
-                <input id="rewards-t" type="number" min="-10" max="10" defaultValue={rewards.t} onChange={onRewardsChange}></input>
+                <input id="rewards-t" type="number" defaultValue={rewards.t} onChange={onRewardsChange}></input>
                 <span>S</span>
-                <input id="rewards-s" type="number" min="-10" max="10" defaultValue={rewards.s} onChange={onRewardsChange}></input>
-                <span>test</span>
+                <input id="rewards-s" type="number" defaultValue={rewards.s} onChange={onRewardsChange}></input>
               </div>
               <input type="submit" value="Run Simulation" />
             </div>
@@ -143,9 +144,9 @@ function App() {
         </section>
 
         <section className="results">
-          {/* <div>Computing results...</div> */}
+          <div id="result">No results...</div>
 
-          <table className="results-table">
+          <table id="results-table">
             <caption>Results of {runs} runs</caption>
             <thead>
               <tr>
@@ -156,7 +157,6 @@ function App() {
               </tr>
           </thead>
           <tbody>
-            {/*console.log("render")*/}{/*console.log("render", scores)*/}
             {
               scores.map((val, key) => {
               return (

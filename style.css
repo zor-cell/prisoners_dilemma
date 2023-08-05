@@ -39,34 +39,35 @@
   width: 50%;
 }
 
-.results-table {
+#results-table {
   border: 1px solid black;
   padding: 0.5rem;
 
   width: 50%;
 }
 
-.results-table th {
+#results-table th {
   text-align: center;
   background-color: var(--clr-primary-300);
 
   cursor: pointer;
 }
 
-.results-table th:hover {
+#results-table th:hover {
   background-color: var(--clr-primary-400);
 
   cursor: pointer;
 }
 
-.results-table td {
+#results-table td {
   text-align: center;
 
   padding: 0.1rem;
 }
 
-#rewards {
-  background-color: red;
+#rewards input {
+  width: 10%;
+  margin: 0 10px 0 2px;
 }
 
 :root {
