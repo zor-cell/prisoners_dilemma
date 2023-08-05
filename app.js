@@ -47,11 +47,11 @@ function App() {
     }
 
     function onSortChange(sortBy) {
-      let tempScores = scores;
-      console.log("sort");
+      //copy values not reference because react doesnt register change otherwise
+      let tempScores = scores.slice();
 
       tempScores.sort((l, r) => {
-        if(sortBy == "N") return l.name < r.name ? 1 : -1;
+        if(sortBy == "N") return l.name > r.name ? 1 : -1;
         else if(sortBy == "A") return l.score.a < r.score.a ? 1 : -1;
         else if(sortBy == "B") return l.score.b < r.score.b ? 1 : -1;
         else if(sortBy == "T") return l.score.total < r.score.total ? 1 : -1;
